@@ -1,4 +1,0 @@
-MissingInputException in line 4 of /exports/cmvm/eddie/eb/groups/watson_grp/software/snakemake_groupfolder/examples/assembly/Snakefile:
-Missing input files for rule trim:
-reads_1.fastq
-reads_2.fastq
