@@ -1,0 +1,51 @@
+{
+    "__default__" :
+    {
+        "core" : "1",
+        "time" : "01:00:00",
+        "vmem" : "4G",
+        "proj" : "roslin_faang"
+    },
+    "trim" :
+    {
+        "core" : "1",
+        "time" : "08:00:00",
+        "vmem" : "16G",
+        "proj" : "roslin_faang"
+    },
+    "megahit" :
+    {
+        "core" : "16",
+        "time" : "64:00:00",
+        "vmem" : "8G",
+        "proj" : "roslin_faang"
+    },
+    "bwa_idx" :
+    {
+        "core" : "1",
+        "time" : "08:00:00",
+        "vmem" : "16G",
+        "proj" : "roslin_faang"
+    },
+    "samtools_idx" :
+    {
+        "core" : "1",
+        "time" : "08:00:00",
+        "vmem" : "16G",
+        "proj" : "roslin_faang"
+    },
+    "bwa_map" :
+    {
+        "core" : "4",
+        "time" : "64:00:00",
+        "vmem" : "16G",
+        "proj" : "roslin_faang"
+    },
+    "annotate" :
+    {
+        "core" : "4",
+        "time" : "64:00:00",
+        "vmem" : "16G",
+        "proj" : "roslin_faang"
+    }
+}

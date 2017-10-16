@@ -1,0 +1,67 @@
+shell.executable("/bin/bash")
+shell.prefix("source $HOME/.bashrc; ")
+
+rule trim:
+	input:
+		r1="{sample}_1.fastq",
+		r2="{sample}_2.fastq"
+	output:
+		r1="{sample}.trimmed.R1.fastq",
+		r2="{sample}.trimmed.R2.fastq",
+		out="{sample}.trim.out"
+	shell:
+		"cutadapt.sh -a AGATCGGAAGAGC -A AGATCGGAAGAGC -o {output.r1} -p {output.r2} {input.r1} {input.r2} > {output.out}"
+
+rule megahit:
+	input:
+		r1="{sample}.trimmed.R1.fastq",
+                r2="{sample}.trimmed.R2.fastq"
+	output:
+		out="{sample}.megahit.out",
+		contigs="{sample}.megahit/final.contigs.fa"
+	threads: 16
+	params:
+		outdir="{sample}.megahit"
+	shell:
+		"megahit.sh -f -1 {input.r1} -2 {input.r2} -o {params.outdir} -t {threads} > {output.out}"
+
+rule bwa_idx:
+	input: 
+		assembly="{sample}.megahit/final.contigs.fa"
+	output:
+		idxout="{sample}.bwaindex.out"
+	shell:
+		"bwa.sh index {input.assembly} > {output.idxout}"
+
+rule samtools_idx:
+	input: 
+		bam="{sample}.sorted.bam"
+	output:
+		bai="{sample}.sorted.bam.bai"
+	shell:
+		"samtools.sh index {input.bam}"
+
+rule bwa_map:
+	input:
+		idxout="{sample}.bwaindex.out",
+		r1="{sample}.trimmed.R1.fastq",
+                r2="{sample}.trimmed.R2.fastq"
+	output:
+		bam="{sample}.sorted.bam"
+	threads: 4
+	params:
+		idxbase="{sample}.megahit/final.contigs.fa"
+	shell:
+		"bwa.sh mem -t {threads} {params.idxbase} {input.r1} {input.r2} | samtools view -bS - | samtools sort -o {output.bam} -"
+
+rule annotate:
+	input:
+		contigs="{sample}.megahit/final.contigs.fa"
+	output:
+		outdir="{sample}.prokka",	
+		out="{sample}.prokka.out"
+	params:
+		prefix="{sample}"
+	threads: 4
+	shell:
+		"prokka.sh --outdir {output.outdir} --prefix {params.prefix} --metagenome --cpus {threads} --mincontiglen 500 {input.contigs} > {output.out}"
