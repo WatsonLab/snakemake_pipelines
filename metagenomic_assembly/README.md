@@ -9,3 +9,4 @@ Simple Snakemake pipeline:
 5) Map reads back to the assembly using BWA
 6) Samtools index the bam
 
+(https://raw.githubusercontent.com/WatsonLab/snakemake_pipelines/master/metagenomic_assembly/assembly.png)
